@@ -32,7 +32,12 @@
 #include "util.h"
 
 /**
+ * @brief Given a decoded instruction pointed by @p inst
+ * returns its string representation with Intel syntax.
  *
+ * @param isnt Decoded instruction.
+ *
+ * @return Instruction string if success, NULL otherwise.
  */
 char *get_inst_str(const xed_decoded_inst_t *inst)
 {
@@ -47,7 +52,15 @@ char *get_inst_str(const xed_decoded_inst_t *inst)
 }
 
 /**
+ * @Brief Given a buffer @p buff and the instruction length
+ * @p len, retrieves the instruction string and saves into
+ * @param inst2.
  *
+ * @param buff  Buffer pointed to be beginning of the instruction.
+ * @param len   Instruction length.
+ * @param inst2 Pointer that will save the decoded instruction.
+ *
+ * @return Instruction string if success, NULL otherwise.
  */
 char *get_inst_str_from_buff(
 	const uint8_t *buff, size_t len, xed_decoded_inst_t *inst2)
@@ -69,7 +82,10 @@ char *get_inst_str_from_buff(
 }
 
 /**
+ * @brief Given a decoded instruction pointed by @p inst
+ * prints its string and its bytes in hexadecimal format.
  *
+ * @param inst Pointer to the decoded instruction.
  */
 void print_inst_str(const xed_decoded_inst_t *inst)
 {
@@ -89,7 +105,10 @@ void print_inst_str(const xed_decoded_inst_t *inst)
 }
 
 /**
+ * @brief Equivalent to @ref print_inst_str but with greater
+ * detail.
  *
+ * @param inst Pointer to the decoded instruction.
  */
 void print_inst_detailed(const xed_decoded_inst_t *inst)
 {
@@ -109,8 +128,18 @@ void print_inst_detailed(const xed_decoded_inst_t *inst)
 }
 
 /**
+ * @brief Compares the string representations of two instructions.
  *
- */
+ * @param inst1 Pointer to the first decoded instruction.
+ * @param inst2 Pointer to the buffer containing the second
+ *              instruction.
+ * @param ret_decoded_inst2 Pointer to the structure that will store
+ *                          the decoded representation of the second
+ *                          instruction.
+ *
+ * @return Returns 1 if the string representations of the two
+ * instructions match, 0 otherwise.
+*/
 int is_decoded_inst_equals_to_inst_buff(
 	const xed_decoded_inst_t *inst1,
 	const uint8_t *inst2,
@@ -137,10 +166,14 @@ int is_decoded_inst_equals_to_inst_buff(
 }
 
 /**
+ * @brief Copies the content of an already opened file (@p fd_in)
+ * to @p out_file.
  *
+ * @param fd_in    Opened file to be copied.
+ * @param out_file Path to the output file.
  *
- * @return Returns the file descriptor of the
- * already copied file.
+ * @return On success, the file descriptor of the new file.
+ * On failure, -1 is returned.
  */
 int copy_file(int fd_in, const char *out_file)
 {
@@ -165,7 +198,11 @@ out0:
 }
 
 /**
+ * @brief Map the contents of an ELF file into memory.
  *
+ * @param info ELF file info structure.
+ *
+ * @return Returns 1 if success, 0 otherwise.
  */
 int mmap_elf(struct elf_file_info *info)
 {
@@ -187,7 +224,9 @@ int mmap_elf(struct elf_file_info *info)
 }
 
 /**
+ * @Brief Deallocates the resources of the MMAPed ELF file.
  *
+ * @param info ELF file info structure.
  */
 void munmap_elf(struct elf_file_info *info)
 {

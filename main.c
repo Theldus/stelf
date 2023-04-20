@@ -79,7 +79,17 @@ static xed_iclass_enum_t bitD_list[] = {
 };
 
 /**
+ * @brief For a given decoded instruction, checks if the
+ * provided instruction have the 'direction-bit'.
  *
+ * Since there is no pattern to identify whether a D-bit may
+ * appear or not, this function just iterates over the
+ * list above.
+ *
+ * @param inst Decoded instruction.
+ *
+ * @return Returns 1 if contains the 'D-bit' in the opcode,
+ * 0 if not.
  */
 static inline int inst_have_bitD(const xed_decoded_inst_t *inst)
 {
@@ -95,11 +105,17 @@ static inline int inst_have_bitD(const xed_decoded_inst_t *inst)
 }
 
 /**
+ * @brief Check if the current instruction pointed by @p inst,
+ * is eligible to patch:
  *
  * In order that an instruction be eligible, it should:
  * - Have D-bit/direction-bit in the opcode
  * - Have ModRM byte
  * - Be in the format: RegSrc/RegDst
+ *
+ * @param inst Decoded instruction.
+ *
+ * @return Returns 1 if eligible, 0 if not.
  *
  */
 static int inst_is_eligible(const xed_decoded_inst_t *inst)
@@ -138,7 +154,18 @@ static int inst_is_eligible(const xed_decoded_inst_t *inst)
 }
 
 /**
+ * @brief Given a current decoded instruction pointed by @p inst,
+ * patches (or not, if FLG_SCAN) the instruction encoding,
+ * accordingly with the specified @p target bit.
  *
+ * @param buff  Buffer pointing to the beginning of the instruction
+ *              (must be RW if FLG_WRITE).
+ * @param inst  Current decoded instruction.
+ * @param isize Current instruction size.
+ * @param target_bit Target bit to be set (or cleared) in the
+ *                   the instruction.
+ *
+ * @return Returns 1 if the patch was succeeded, 0 if not.
  */
 static int patch_inst(
 	uint8_t *buff, const xed_decoded_inst_t *inst, unsigned isize,
@@ -234,7 +261,10 @@ static int patch_inst(
 }
 
 /**
+ * @brief Reads from stdin and returns the next bit to be
+ * patched into the ELF file.
  *
+ * @return Returns the bit read, or -1 if EOF.
  */
 static int read_next_bit(void)
 {
@@ -262,7 +292,12 @@ static int read_next_bit(void)
 }
 
 /**
+ * @brief Given a decoded instruction pointed by @p inst,
+ * writes to stdout the read bit.
  *
+ * @param inst Current decoded instruction.
+ * @param buff Buffer pointing to the beginning of the current
+ *             instruction.
  */
 static void write_next_bit(const xed_decoded_inst_t *inst,
 	const uint8_t *buff)
@@ -294,7 +329,15 @@ static void write_next_bit(const xed_decoded_inst_t *inst,
 }
 
 /**
- *
+ * @brief For an already parsed ELF file, read its entire .text
+ * section and decodes all instruction. Its behavior depends
+ * on the current mode.
+ * If:
+ *   FLG_SCAN:  Only decodes the instructions and checks for
+ *              instructions candidates to patch.
+ *   FLG_WRITE: Reads from stdin and write to the output ELF file.
+ *   FLG_READ:  Reads from the input ELF file and write to stdout
+ *              the (already saved) bits.
  */
 static void decode_instructions(void)
 {
@@ -387,7 +430,13 @@ static void decode_instructions(void)
 }
 
 /**
+ * @brief Initializes the input ELF file pointed by @p in,
+ * and fill the auxiliary data structures with the relevant
+ * info.
  *
+ * @param in Path to the ELF file to read.
+ *
+ * @return Returns if success, 0 otherwise.
  */
 static int init_elf(const char *in)
 {
@@ -530,7 +579,7 @@ int main(int argc, char **argv)
 	/* Decode everything. */
 	decode_instructions();
 
-	/* Dealloc everything. */
+	/* Deallocate everything. */
 	munmap_elf(&info);
 
 	return (0);

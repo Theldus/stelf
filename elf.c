@@ -90,7 +90,9 @@ static void close_elf(void)
 }
 
 /**
- * @Brief Given a opened ELF file, find a load its strtab content.
+ * @brief Given a opened ELF file, find and load its strtab content.
+ *
+ * @param machine_type Save ELF machine type.
  *
  * @return Returns 1 if success, 0 otherwise.
  */
@@ -126,13 +128,14 @@ out0:
 }
 
 /**
- * @brief Find ...
+ * @brief Find the ELF .text section and fill all the relevant
+ * info needed for that section.
  *
- * @param addr
- * @param f_off
- * @param s_size
+ * @param addr   Returned .text start address.
+ * @param f_off  Returned .text file offset.
+ * @param s_size Returned .text size (in bytes).
  *
- * @return
+ * @return Returns 1 if success, 0 otherwise.
  */
 static int find_text_section(uint64_t *addr, uint64_t *f_off,
 	uint64_t *s_size)
@@ -165,7 +168,13 @@ static int find_text_section(uint64_t *addr, uint64_t *f_off,
 }
 
 /**
+ * @brief Open a given ELF file pointed by @p elf_file and fill
+ * into @p info all the relevant information about that ELF file.
  *
+ * @param elf_file ELF file path.
+ * @param info     Structure elf_file_info.
+ *
+ * @return Returns 0 if success, -1 otherwise.
  */
 int open_and_load_elf_text(const char *elf_file,
 	struct elf_file_info *info)
@@ -199,7 +208,8 @@ out0:
 }
 
 /**
- *
+ * @brief Deallocates all the resources allocated to
+ * handle the ELF file.
  */
 void unload_elf_text(void) {
 	close_elf();
