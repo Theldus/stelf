@@ -21,13 +21,13 @@
 # SOFTWARE.
 
 # Paths
-# CFLAGS += -Wall -Wextra -pedantic -O2
+CFLAGS += -Wall -Wextra -pedantic -O2
 XED_KIT_PATH ?= $(PWD)/xed-install-base-2023-04-07-lin-x86-64
 INCLUDE_PATH  = $(XED_KIT_PATH)/include
 LIBRARY_PATH  = $(XED_KIT_PATH)/lib/
 
 CC ?= cc
-CFLAGS  = -g -I$(INCLUDE_PATH)
+CFLAGS  = -I$(INCLUDE_PATH)
 LDFLAGS = -L$(LIBRARY_PATH)
 LDLIBS  = -lxed -lelf
 OBJ = main.o util.o elf.o
