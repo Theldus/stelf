@@ -4,6 +4,12 @@
 Hide binary data inside x86 ELF files by changing the instruction encoding
 
 ## How it works?
+TL;DR: Stelf works by putting binary data inside the instruction itself, but
+keeping the same instruction as before, without changing the execution flow
+or anything.
+
+<details><summary>Longer explanation</summary>
+
 Stelf works by (ab)using of the ModR/M byte and the 'direction-bit' `d`: in
 instructions that involve memory operands or registers, the 'ModR/M' byte
 follows the instruction's opcode.
@@ -69,9 +75,48 @@ is stored.
 
 _\~ For 64-bit registers (like RAX-RDX, R8-R15...) Stelf also takes into account the `REX`
 prefix, but for simplicity the explanation will be omitted here \~._
-
+</details>
+  
 ## Usage
+Using stelf is quite simple, just a) first analyze how many bytes are available to be
+added to the target file and b) add this data.
 
+### a) Scan how many bytes are available (`-s`):
+Use the `-s` option to scan a target binary:
+```bash
+$ ./stelf -s ~/clang-static/bin/clang-11
+Scan summary:
+380174 bytes available (3041399 inst patcheables, out of 16166560 (~18 %))
+```
+
+### b) Add arbitrary data into the ELF file (`-w`):
+Use the `-w` option to add a given file from stdin to the specified target file:
+```bash
+# Omitting output file, a 'out' file will be created:
+$ ./stelf -w ~/clang-static/bin/clang-11 < my_input_file
+Write summary:
+Wrote 357336 bits (44667 bytes)
+
+# Specifying the output file
+$ ./stelf -w ~/clang-static/bin/clang-11 -o my_out_file < my_input_file
+Write summary:
+Wrote 357336 bits (44667 bytes)
+```
+
+### c) Read the written data (`r`):
+To read the written data, just use the `-r` flag. With parameter '0', all binary
+data is read, any other value reads the specified amount:
+```bash
+# Read all the data
+$ ./stelf -r 0 out > my_read_data
+$ wc -c my_read_data
+380174 my_read_data
+
+# Read only a given amount
+$ ./stelf -r 44667 out > my_read_data
+$ wc -c my_read_data
+44667 my_read_data
+```
 
 ## How much data can I store?
 
