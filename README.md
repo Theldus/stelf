@@ -119,6 +119,16 @@ $ wc -c my_read_data
 ```
 
 ## How much data can I store?
+Stelf's effectiveness is influenced by a number of variables. Stelf makes use of nine
+different instruction classes: `MOV`,`ADD`,`SUB`,`SBB`,`CMP`,`AND`, `OR`,`XOR`, and
+`ADC`, all of which must be in Reg/Reg format. Additionally, only a single bit
+is gained per patched instruction.
+
+Assuming an average instruction size of 4 bytes, roughly 16% of the total instructions
+can be patched, or about 1/200th of the size of the entire `.text` section.
+
+The following table includes some examples:
+
 
 ## Is it really stealth?
 
