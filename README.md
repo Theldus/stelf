@@ -120,17 +120,40 @@ $ wc -c my_read_data
 
 ## How much data can I store?
 Stelf's effectiveness is influenced by a number of variables. Stelf makes use of nine
-different instruction classes: `MOV`,`ADD`,`SUB`,`SBB`,`CMP`,`AND`, `OR`,`XOR`, and
-`ADC`, all of which must be in Reg/Reg format. Additionally, only a single bit
-is gained per patched instruction.
+different instruction: `MOV`,`ADD`,`SUB`,`SBB`,`CMP`,`AND`, `OR`,`XOR`, and `ADC`, all
+of which must be in Reg/Reg format. Additionally, only a single bit is gained per
+patched instruction.
 
 Assuming an average instruction size of 4 bytes, roughly 16% of the total instructions
 can be patched, or about 1/200th of the size of the entire `.text` section.
 
 The following table includes some examples:
-
+|       **ELF file**      | **ELF size / `.text` size** | **% of insn patcheable** | **bytes available** |
+|:-----------------------:|:---------------------------:|:------------------------:|:-------------------:|
+|        /bin/bash        |        1.2M / 716kB         |            15%           |         3496        |
+|       /usr/bin/lua      |       175kB / 106kB         |            20%           |         764         |
+|     /usr/bin/docker     |        57M / 22.25M         |            6%            |        40455        |
+|         Bat 0.21        |       5.1M / 2.65M          |            15%           |        12404        |
+|     Hyperfine 1.15.0    |        2.3M / 1.42M         |            15%           |         6678        |
+|     clang-11-static     |       117M / 63.21M         |            18%           |        380174       |
+|    firefox/libxul.so    |       149M / 93.33M         |            15%           |        445933       |
+| libnvoptix.so.510.47.03 |       168M / 13.69M         |            19%           |        83014        |
 
 ## Is it really stealth?
+It all depends. The data is inserted into the instruction itself, but the code
+path remains unchanged, and no data is visible to the naked eye in a hex editor,
+for example. A very careful eye, on the other hand, might notice that the
+instructions have been changed: a compiler would not generate two identical
+instructions in different ways, with different encoding, so this raises
+suspicions.
+
+That said, I wouldn't put sensitive data in without some form of encryption for
+example, but Stelf still strikes me as quite useful for creating 'watermarks'
+e.g. in case you want to restrict an ELF as 'internal use' and things like.
+
+Also, I confess that I was quite surprised with the amount of bytes available
+for each ELF analyzed, I expected much less!. Furthermore, the available space
+won't consume more disk, since it was always there anyway =).
 
 ## Building
 
