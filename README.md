@@ -156,6 +156,35 @@ for each ELF analyzed, I expected much less!. Furthermore, the available space
 won't consume more disk, since it was always there anyway =).
 
 ## Building
+Stelf depends on libelf and Intel XED, so the build process might look like this:
+```bash
+# Clone Stelf
+git clone https://github.com/Theldus/stelf
+
+# Install libelf
+sudo apt install libelf-dev  # Debian/Ubuntu...
+
+# Install Intel XED
+mkdir libxed/ && cd libxed/
+git clone https://github.com/intelxed/mbuild.git mbuild
+git clone https://github.com/intelxed/xed.git xed
+cd xed/
+./mfile.py install
+export XED_KIT_PATH=$(readlink -f $PWD/kits/xed-install-base-*)
+
+# Build Stelf
+cd ../../
+make
+```
+In case of incompatibility with different libraries versions, the following
+versions/commit were used:
+```text
+xed: 4dc77137f651def2ece4ac0416607b215c18e6e4 External Release v2023.06.07
+mbuild: 75cb46e6536758f1a3cdb3d6bd83a4a9fd0338bb External Release v2022.07.28
+libelf: v0.181
+```
+
+
 
 ## Contributing
 Stelf is always open to the community and willing to accept contributions,
