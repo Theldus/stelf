@@ -61,8 +61,6 @@ int machine_address;
 static struct elf_file_info info;
 static char  *out_file;
 static char  *inp_file;
-static size_t inp_size;
-
 
 /**
  * D-bit (direction bit) instructions table.
@@ -104,7 +102,7 @@ static xed_iclass_enum_t bitD_list[] = {
 static inline int inst_have_bitD(const xed_decoded_inst_t *inst)
 {
 	xed_iclass_enum_t iclass;
-	int i;
+	size_t i;
 
 	iclass = xed_decoded_inst_get_iclass(inst);
 	for (i = 0; i < sizeof(bitD_list)/sizeof(bitD_list[0]); i++)
@@ -132,7 +130,6 @@ static int inst_is_eligible(const xed_decoded_inst_t *inst)
 {
 	uint8_t modrm;
 	const xed_inst_t *xi;
-	const xed_operand_t *op;
 	xed_operand_enum_t op_name1, op_name2;
 
 	/* Have D-bit?. */
@@ -187,6 +184,7 @@ static int patch_inst(
 	unsigned off_modrm, off_opcode;
 	uint8_t rex, bitD, modrm, opcode;
 
+	((void)inst_new);
 	memcpy(nbuff, buff, isize);
 
 	/* Get offsets for ModRM and opcode. */
@@ -368,6 +366,7 @@ static void decode_instructions(void)
 	written_bits     = 0;
 	total_inst_count = 0;
 	patch_inst_count = 0;
+	amnt_bits_read   = 0;
 
 	while (rem_bytes)
 	{
@@ -450,10 +449,8 @@ static void decode_instructions(void)
  */
 static int init_elf(const char *in)
 {
-	uint64_t elf_off;
-	int mtype;
 	int fd_in;
-	int fd_out;
+	int fd_out = 0;
 
 	/* Initialize XED context. */
 	xed_tables_init();

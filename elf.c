@@ -155,7 +155,7 @@ static int find_text_section(uint64_t *addr, uint64_t *f_off,
 			continue;
 
 		/* Check if we're at .text. */
-		sname = strtab_data->d_buf + shdr.sh_name;
+		sname = (char*)strtab_data->d_buf + shdr.sh_name;
 		if (strcmp(sname, ".text"))
 			continue;
 
@@ -179,8 +179,6 @@ static int find_text_section(uint64_t *addr, uint64_t *f_off,
 int open_and_load_elf_text(const char *elf_file,
 	struct elf_file_info *info)
 {
-	uint64_t f_off;
-
 	if (!elf_file)
 		return (-1);
 
