@@ -34,7 +34,17 @@
 #include "util.h"
 #include "main.h"
 
-#define DOUBLE_CHECK
+/*
+ * Uncomment to enable DOUBLE_CHECK:
+ * With this macro enabled, each patched instruction is checked aginst
+ * the original to make sure it is exactly the same decoded instruction.
+ *
+ * This adds some overhead so its disabled by default.
+ * Enabled it if you're not sure if the patching is behaving
+ * correctly.
+ */
+/* #define DOUBLE_CHECK. */
+
 #define OPC_BITD_MASK 0x2
 
 /* Flags. */
