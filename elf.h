@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-#ifndef ELF_H
-#define ELF_H
+#ifndef MYELF_H
+#define MYELF_H
 
 	#include "main.h"
 
@@ -32,4 +32,4 @@
 
 	extern void unload_elf_text(void);
 
-#endif /* ELF_H. */
+#endif /* MYELF_H. */
